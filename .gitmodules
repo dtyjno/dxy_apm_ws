@@ -1,9 +1,16 @@
 [submodule "src/px4_ros_com"]
 	path = src/px4_ros_com
 	url = https://github.com/dtyjno/drone.git
+	branch = main
 [submodule "src/offboard"]
 	path = src/offboard
 	url = https://github.com/Hz1234567890/offboard.git
+	branch = main
 [submodule "src/ros_gz_sim_ardupilot"]
 	path = src/ros_gz_sim_ardupilot
 	url = https://github.com/dtyjno/drone_sim.git
+	branch = main
+[submodule "src/ardupilot_gazebo"]
+	path = src/ardupilot_gazebo
+	url = https://github.com/ArduPilot/ardupilot_gazebo.git
+	branch = ros2
