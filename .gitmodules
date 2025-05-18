@@ -1,0 +1,9 @@
+[submodule "src/px4_ros_com"]
+	path = src/px4_ros_com
+	url = https://github.com/dtyjno/drone.git
+[submodule "src/offboard"]
+	path = src/offboard
+	url = https://github.com/Hz1234567890/offboard.git
+[submodule "src/ros_gz_sim_ardupilot"]
+	path = src/ros_gz_sim_ardupilot
+	url = https://github.com/dtyjno/drone_sim.git
