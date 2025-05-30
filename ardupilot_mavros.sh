@@ -18,7 +18,8 @@ ros2 launch ros_gz_sim_ardupilot iris_runway.launch.py;
 
 sleep 3s
 gnome-terminal -t "SITL" -x bash -c "
-sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --map --console --out 127.0.0.1:14550;
+sim_vehicle.py -D -v ArduCopter -f gazebo-iris --model JSON --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm --map --console --out 127.0.0.1:14550;
+# rc 6 1100
 "
 sleep 13s
 gnome-terminal -t "mavros" -x bash -c "
