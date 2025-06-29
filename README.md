@@ -312,3 +312,17 @@ ros2_land.sh              #发布降落命令
 image_sub_gazebo_small.sh #接收图像，发布yolo识别后位置
 ```
 
+
+### SITL
+您可以通过使用 -L 参数和命名的 sim_vehicle.py 来使用特定位置的车辆启动模拟器 ardupilot/Tools/autotest/locations.txt 
+```
+#NAME=latitude,longitude,absolute-altitude,heading
+HDU=30.317423,120.340137,0,178
+```
+您可以将自己的位置添加到文件中。顺序为 Lat、Lng、Alt、Heading，其中 alt 是 MSL 和米，heading 是度。
+
+您可以将自己的私有位置添加到本地 locations.txt 文件中，其格式与主文件相同。在 linux 上，文件位于 $HOME/.config/ardupilot/locations.txt - 您需要使用您最喜欢的文本编辑器创建此文件。
+```bash
+sim_vehicle.py -D -v ArduCopter -L HDU -f gazebo-iris --model JSON --map --console --out 127.0.0.1:14550 --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm;
+```
+

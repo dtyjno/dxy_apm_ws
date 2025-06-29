@@ -6,7 +6,7 @@ if [ ! -f /usr/local/share/GeographicLib/geoids/egm96-5.pgm ]; then
 fi
 
 # Launch Gazebo
-gnome-terminal -t "gazebo" -x bash -c "
+gnome-terminal --title "gazebo" -- bash -c "
 
 source install/setup.bash;
 
@@ -17,12 +17,14 @@ ros2 launch ros_gz_sim_ardupilot iris_runway.launch.py;
 "
 
 sleep 3s
-gnome-terminal -t "SITL" -x bash -c "
-sim_vehicle.py -D -v ArduCopter -f gazebo-iris --model JSON --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm --map --console --out 127.0.0.1:14550;
-# rc 6 1100
+gnome-terminal --title "SITL" -- bash -c "
+sim_vehicle.py -D -v ArduCopter -L HDU -f gazebo-iris --model JSON --map --console \
+  --out 127.0.0.1:14550 \
+  --out 127.0.0.1:14551 \
+  --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm;
 "
 sleep 13s
-gnome-terminal -t "mavros" -x bash -c "
+gnome-terminal --title "mavros" -- bash -c "
 source /opt/ros/humble/setup.bash;
 ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555;
 "

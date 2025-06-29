@@ -1,0 +1,6 @@
+# .gitignore
+build/
+install/
+log/
+logs/
+terrain/
