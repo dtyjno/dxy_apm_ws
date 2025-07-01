@@ -4,7 +4,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "cv_bridge/cv_bridge.hpp"
 #include "Mat2image.hpp"
-#include "ros2_interfaces/msg/coord.hpp"
+// #include "ros2_interfaces/msg/coord.hpp"
+#include "ros2_yolo_msgs/msg/detected_box.hpp"
 #include <ctime>
 
 #define USE_CUDA true
@@ -37,13 +38,13 @@ public:
         readmodel();
 
         subscriber_ = this->create_subscription<sensor_msgs::msg::Image>(
-            "gui/camera", 
+            "image_topic", 
             10, 
             std::bind(&imageSub::image_callback, this, std::placeholders::_1)
         );
 
-        publisher_ = this->create_publisher<ros2_interfaces::msg::Coord>("coord", 10);
-        
+        publisher_ = this->create_publisher<ros2_yolo_msgs::msg::DetectedBox>("detected_boxes", 10);
+
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(10), 
             std::bind(&imageSub::timer_callback, this)
@@ -53,7 +54,7 @@ public:
 
 private:
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber_;
-    rclcpp::Publisher<ros2_interfaces::msg::Coord>::SharedPtr publisher_;
+    rclcpp::Publisher<ros2_yolo_msgs::msg::DetectedBox>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     VideoCapture cap;
     Yolo test;
@@ -186,10 +187,12 @@ private:
     }
 
     void timer_callback() {
-        ros2_interfaces::msg::Coord message;
-        sscanf(cir_coord, "%f,%f,%d", &message.x1, &message.y1, &message.flag_servo);
+        ros2_yolo_msgs::msg::DetectedBox message;
+        sscanf(cir_coord, "%f,%f,%d", &message.x1, &message.y1, &message.servo);
         sscanf(H_coord, "%f, %f", &message.x2, &message.y2);
-        RCLCPP_INFO(this->get_logger(), "Publishing Coord, %f, %f, %f, %f, %d", message.x1, message.y1, message.x2, message.y2, message.flag_servo);
+        // message.y1 =  - message.y1; // Flip the y-coordinate
+        // message.y2 =  - message.y2; // Flip the y-coordinate
+        RCLCPP_INFO(this->get_logger(), "Publishing DetectedBox, %f, %f, %f, %f, %d", message.x1, message.y1, message.x2, message.y2, message.servo);
         publisher_->publish(message);
     }
 

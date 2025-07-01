@@ -16,6 +16,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(ros2_interfaces REQUIRED)
+find_package(ros2_yolo_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 
@@ -32,7 +33,7 @@ add_executable(image_sub src/image_sub.cpp src/yolo.cpp src/image_base64.cpp)
 ament_target_dependencies(image_sub rclcpp OpenCV cv_bridge ros2_interfaces sensor_msgs)
 
 add_executable(image_sub_gazebo src/image_sub_gazebo.cpp src/yolo.cpp src/image_base64.cpp)
-ament_target_dependencies(image_sub_gazebo rclcpp OpenCV cv_bridge ros2_interfaces sensor_msgs)
+ament_target_dependencies(image_sub_gazebo rclcpp OpenCV cv_bridge ros2_interfaces ros2_yolo_msgs sensor_msgs)
 
 install(TARGETS
   image_pub

@@ -37,7 +37,7 @@ public:
         readmodel();
 
         subscriber_ = this->create_subscription<sensor_msgs::msg::Image>(
-            "gui/camera", 
+            "image_topic", 
             10, 
             std::bind(&imageSub::image_callback, this, std::placeholders::_1)
         );

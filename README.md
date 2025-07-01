@@ -262,10 +262,9 @@ colcon build --packages-select ros2_interfaces
 source install/setup.bash
 ```
 
-### 启动程序
+### 程序脚本
 
-理解各个脚本内的内容  
-以gazebo.sh为例，安装Chapter4内项目后：
+以gazebo.sh为例，安装项目后：
 ```sh
 cd ~/ros2_ws/ardupilot_ws;
 source /opt/ros/jazzy/setup.bash;
@@ -307,11 +306,9 @@ gazebo.sh                 #启动gazebo，发布图像
 ros2_mavros.sh            #mavros
 ros2_colcon.sh            #编译控制代码
 ros2_offboard.sh          #启动控制代码
-ros2_land.sh              #发布降落命令
 # 如安装图象识别代码（见Chapter2实践部分）
 image_sub_gazebo_small.sh #接收图像，发布yolo识别后位置
 ```
-
 
 ### SITL
 您可以通过使用 -L 参数和命名的 sim_vehicle.py 来使用特定位置的车辆启动模拟器 ardupilot/Tools/autotest/locations.txt 
@@ -326,3 +323,21 @@ HDU=30.317423,120.340137,0,178
 sim_vehicle.py -D -v ArduCopter -L HDU -f gazebo-iris --model JSON --map --console --out 127.0.0.1:14550 --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm;
 ```
 
+### 启动程序
+
+先 cd 到项目目录
+
+仿真环境
+```
+./ardupilot_mavros.sh
+
+source install/setup.bash
+ros2 run topic images_sub_gazebo
+```
+控制代码
+```
+source install/setup.bash
+ros2 run px4_ros_com _offboard
+#-----------或使用脚本
+./run.sh
+```
