@@ -23,23 +23,16 @@
 - 仿真概述
 ![仿真概述](doc/仿真概述.png)
 
-docker build -t dxy_apm_ws:latest -f Dockerfile/Dockerfile .
-
-docker run -it --device=/dev/dri --group-add video --volume=/tmp/.X11-unix:/tmp/.X11-unix  --env="DISPLAY=$DISPLAY"  --name=your_container_name IMAGE_ID  /bin/bash
-docker run -it --rm \
-    --name dxy_apm_${MODE} \
-    --user $USER_ID:$GROUP_ID \
-    --env DISPLAY=$DISPLAY \
-    --env QT_X11_NO_MITSHM=1 \
-    --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    --volume /dev/dri:/dev/dri \
-    --privileged \
-    --network host \
-    dxy_apm:latest"
 
 
+### 2. 安装ardupilot仿真（即ardupilot sitl 与 mavros以及gazebo）
 
-### 2. 安装ardupilot仿真（即ardupilot sitl 与 mavros以及gazebo）不考核
+docker
+```
+./build_docker.sh
+./run_docker.sh gazebo
+./run_docker.sh mavros
+```
 
 ```sh
 git clone --recurse-submodules https://github.com/ArduPilot/ardupilot.git
@@ -59,8 +52,6 @@ sim_vehicle.py --console --map
 # sim_vehicle.py -w -v ArduCopter
 # sim_vehicle.py --vehicle=ArduCopter --console --map
 ```
-
-自行了解各个仿真工具的功能
 
 如果你使用wsl2，你可以尝试[通过 Mission Planner 的模拟功能运行SITL](https://ardupilot.org/planner/docs/mission-planner-simulation.html#mission-planner-simulation)
 
@@ -92,7 +83,6 @@ https://ardupilot.org/dev/docs/sitl-with-gazebo.html
 https://gazebosim.org/docs/ionic/install/
 https://gazebosim.org/docs/fortress/ros2_gz_vendor_pkgs/  
 
-提示：可以尝试了解ros2与ardupilot通过dds直接连接，但目前（2024年11月）该项目开发进度尚未到可使用水平（只支持模式转换，起飞降落）
 
 ### 3. 启动仿真
 #### 使用 SITL
