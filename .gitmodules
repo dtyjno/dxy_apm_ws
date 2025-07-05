@@ -5,7 +5,7 @@
 [submodule "src/offboard"]
 	path = src/offboard
 	url = https://github.com/Hz1234567890/offboard.git
-	branch = main
+	branch = master
 [submodule "src/ros_gz_sim_ardupilot"]
 	path = src/ros_gz_sim_ardupilot
 	url = https://github.com/dtyjno/drone_sim.git

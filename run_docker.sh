@@ -50,7 +50,7 @@ DOCKER_CMD="docker run -it --rm \
 case $MODE in
     "gazebo")
         echo "启动Gazebo仿真..."
-        $DOCKER_CMD
+        $DOCKER_CMD bash -c "ros2 launch ros_gz_sim_ardupilot iris_runway.launch.py"
         ;;
     "sitl")
         echo "启动ArduPilot SITL..."

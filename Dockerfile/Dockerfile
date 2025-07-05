@@ -41,6 +41,7 @@ RUN apt-get install -y --no-install-recommends \
     libopencv-dev \
     libyaml-cpp-dev \
     libncurses5-dev \
+    # lsb-release \
     # ROS2 packages
     ros-${ROS_DISTRO}-mavros \
     ros-${ROS_DISTRO}-mavros-msgs \
@@ -118,28 +119,31 @@ RUN cd /home/dxy_apm_ws/ \
     && sudo mkdir -p /etc/ros/rosdep/sources.list.d/  \
     && sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list -L https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list \
     && export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml \
-    && rosdep update --rosdistro ${ROS_DISTRO}  \
-    && echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc
+    && rosdep update --rosdistro ${ROS_DISTRO}
 
 # 清理之前的构建缓存和安装项目依赖
 RUN cd /home/dxy_apm_ws/ \
     && rm -rf build/ install/ log/ \
     && sudo apt-get update \
-    && rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} \
+    && rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6 gz-cmake3" \
     && sudo apt-get autoremove -y -qq \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # 构建项目
-RUN /bin/bash -c "cd /home/dxy_apm_ws/ \
-  && source /opt/ros/${ROS_DISTRO}/setup.bash \
-  && colcon build --symlink-install --packages-select ros2_interfaces ros2_yolo_msgs \
-  && source install/setup.bash \
-  && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2 px4_ros_com" \
-  && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc \
-  && echo "source /home/dxy_apm_ws/install/setup.bash" >> ~/.bashrc \
-  && echo "export ROS_DOMAIN_ID=0" >> ~/.bashrc \
-  && echo "export GZ_SIM_SYSTEM_PLUGIN_PATH=/home/dxy_apm_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo:\$GZ_SIM_SYSTEM_PLUGIN_PATH" >> ~/.bashrc \
-  && echo "export GZ_SIM_RESOURCE_PATH=/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/models:/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/worlds:\$GZ_SIM_RESOURCE_PATH" >> ~/.bashrc 
+RUN cd /home/dxy_apm_ws/ \
+    && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
+    && colcon build --symlink-install --packages-select ros2_interfaces ros2_yolo_msgs" \
+    && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
+    && source install/setup.bash \
+    && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2 px4_ros_com"
+
+# # 设置环境变量到bashrc
+# RUN echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc \
+#   && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc \
+#   && echo "source /home/dxy_apm_ws/install/setup.bash" >> ~/.bashrc \
+#   && echo "export ROS_DOMAIN_ID=0" >> ~/.bashrc \
+#   && echo "export GZ_SIM_SYSTEM_PLUGIN_PATH=/home/dxy_apm_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo:\$GZ_SIM_SYSTEM_PLUGIN_PATH" >> ~/.bashrc \
+#   && echo "export GZ_SIM_RESOURCE_PATH=/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/models:/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/worlds:\$GZ_SIM_RESOURCE_PATH" >> ~/.bashrc
 
 # 设置工作目录
 WORKDIR /home/dxy_apm_ws

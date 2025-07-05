@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Source ROS2 setup
-source /opt/ros/"${ROS_DISTRO}"/setup.bash
+. /opt/ros/"${ROS_DISTRO}"/setup.bash
 
 # Change to workspace directory
 cd /home/dxy_apm_ws
 
 # Source workspace setup if it exists
 if [ -f "install/setup.bash" ]; then
-    source install/setup.bash
+    . install/setup.bash
 fi
 
 # Set up environment variables for Gazebo
