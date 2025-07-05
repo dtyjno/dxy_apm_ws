@@ -10,8 +10,8 @@ gnome-terminal --title "gazebo" -- bash -c "
 
 source install/setup.bash;
 
-export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/code/ros2/ardupilot_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo:$GZ_SIM_SYSTEM_PLUGIN_PATH;
-export GZ_SIM_RESOURCE_PATH=$HOME/code/ros2/ardupilot_ws/src/ros_gz_sim_ardupilot/models:$HOME/code/ros2/ardupilot_ws/src/ros_gz_sim_ardupilot/worlds:${GZ_SIM_SYSTEM_PLUGIN_PATH};
+export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/code/ros2/dxy_apm_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo:$GZ_SIM_SYSTEM_PLUGIN_PATH;
+export GZ_SIM_RESOURCE_PATH=$HOME/code/ros2/dxy_apm_ws/src/ros_gz_sim_ardupilot/models:$HOME/code/ros2/ardupilot_ws/src/ros_gz_sim_ardupilot/worlds:${GZ_SIM_SYSTEM_PLUGIN_PATH};
 sleep 1;
 ros2 launch ros_gz_sim_ardupilot iris_runway.launch.py;
 "
