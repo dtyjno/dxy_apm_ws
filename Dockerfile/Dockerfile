@@ -88,11 +88,9 @@ RUN apt-get install -y --no-install-recommends \
 
 # 创建用户
 ARG USERNAME=dxy
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
 
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+RUN groupadd $USERNAME \
+    && useradd --gid $USERNAME -m $USERNAME \
     && apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
@@ -136,7 +134,12 @@ RUN /bin/bash -c "cd /home/dxy_apm_ws/ \
   && source /opt/ros/${ROS_DISTRO}/setup.bash \
   && colcon build --symlink-install --packages-select ros2_interfaces ros2_yolo_msgs \
   && source install/setup.bash \
-  && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2"
+  && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2 px4_ros_com" \
+  && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc \
+  && echo "source /home/dxy_apm_ws/install/setup.bash" >> ~/.bashrc \
+  && echo "export ROS_DOMAIN_ID=0" >> ~/.bashrc \
+  && echo "export GZ_SIM_SYSTEM_PLUGIN_PATH=/home/dxy_apm_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo:\$GZ_SIM_SYSTEM_PLUGIN_PATH" >> ~/.bashrc \
+  && echo "export GZ_SIM_RESOURCE_PATH=/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/models:/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/worlds:\$GZ_SIM_RESOURCE_PATH" >> ~/.bashrc 
 
 # 设置工作目录
 WORKDIR /home/dxy_apm_ws
@@ -146,11 +149,6 @@ ENV ROS_WORKSPACE=/home/dxy_apm_ws
 ENV DISPLAY=:0
 ENV GZ_SIM_SYSTEM_PLUGIN_PATH=/home/dxy_apm_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo
 ENV GZ_SIM_RESOURCE_PATH=/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/models:/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/worlds
-RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc && \
-    echo "source /home/dxy_apm_ws/install/setup.bash" >> ~/.bashrc && \
-    echo "export ROS_DOMAIN_ID=0" >> ~/.bashrc && \
-    echo "export GZ_SIM_SYSTEM_PLUGIN_PATH=/home/dxy_apm_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo:\$GZ_SIM_SYSTEM_PLUGIN_PATH" >> ~/.bashrc && \
-    echo "export GZ_SIM_RESOURCE_PATH=/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/models:/home/dxy_apm_ws/src/ros_gz_sim_ardupilot/worlds:\$GZ_SIM_RESOURCE_PATH" >> ~/.bashrc
 
 COPY Dockerfile/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

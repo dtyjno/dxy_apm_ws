@@ -12,7 +12,7 @@ list(APPEND CMAKE_PREFIX_PATH /)
 # find dependencies
 
 #set(OpenCV_DIR /usr/local/lib/cmake/opencv4)  # 根据实际路径修改
-find_package(OpenCV 4.10 REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(cv_bridge REQUIRED)
