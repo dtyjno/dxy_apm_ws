@@ -1,3 +1,5 @@
+# TODO: Add SITL support
+
 ARG ROS_DISTRO=jazzy
 
 FROM ros:${ROS_DISTRO}-ros-base
@@ -135,7 +137,7 @@ RUN cd /home/dxy_apm_ws/ \
     && colcon build --symlink-install --packages-select ros2_interfaces ros2_yolo_msgs" \
     && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
     && source install/setup.bash \
-    && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2 px4_ros_com"
+    && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2"
 
 # # 设置环境变量到bashrc
 # RUN echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc \
