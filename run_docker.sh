@@ -41,11 +41,15 @@ DOCKER_CMD="docker run -it --rm \
     --name dxy_apm_${MODE} \
     --user $USER_ID:$GROUP_ID \
     --env DISPLAY=$DISPLAY \
+    --env ROS_LOCALHOST_ONLY=0 \
     --env QT_X11_NO_MITSHM=1 \
     --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
     --volume /dev/dri:/dev/dri \
     --privileged \
     --network host \
+    --ipc host \
+    --pid host \
+
     dxy_apm_ws:latest"
 
 case $MODE in
