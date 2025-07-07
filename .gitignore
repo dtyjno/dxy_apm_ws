@@ -4,3 +4,6 @@ install/
 log/
 logs/
 terrain/
+mav.tlog.raw
+mav_0_1.parm
+eeprom.bin

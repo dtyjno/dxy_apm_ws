@@ -1,6 +1,6 @@
 # TODO: Add SITL support
 
-ARG ROS_DISTRO=jazzy
+ARG ROS_DISTRO=humble
 
 FROM ros:${ROS_DISTRO}-ros-base
 
@@ -8,16 +8,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 设置Ubuntu镜像源 (noble for jazzy, jammy for humble)
 RUN arch=$(dpkg --print-architecture) && \
-    if [ "$arch" = "amd64" ] || [ "$arch" = "i386" ]; then \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse" > /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list ; \
+    if [ "${ROS_DISTRO}" = "humble" ]; then \
+      UBUNTU_VERSION="jammy"; \
+    elif [ "${ROS_DISTRO}" = "jazzy" ]; then \
+      UBUNTU_VERSION="noble"; \
     else \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ noble main restricted universe multiverse" > /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ noble-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] http://ports.ubuntu.com/ubuntu-ports/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list ; \
+      UBUNTU_VERSION="jammy"; \
+    fi && \
+    if [ "$arch" = "amd64" ] || [ "$arch" = "i386" ]; then \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION} main restricted universe multiverse" > /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION}-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION}-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION}-security main restricted universe multiverse" >> /etc/apt/sources.list ; \
+    else \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ ${UBUNTU_VERSION} main restricted universe multiverse" > /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ ${UBUNTU_VERSION}-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ ${UBUNTU_VERSION}-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] http://ports.ubuntu.com/ubuntu-ports/ ${UBUNTU_VERSION}-security main restricted universe multiverse" >> /etc/apt/sources.list ; \
     fi && \
     rm -f /etc/apt/sources.list.d/* && \
     apt-get update && \
@@ -25,7 +32,7 @@ RUN arch=$(dpkg --print-architecture) && \
     rm -f /etc/apt/sources.list.d/ros2.list && \
     curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg && \
     chmod a+r /usr/share/keyrings/ros-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu noble main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu ${UBUNTU_VERSION} main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
     apt-get update && \
     apt-get upgrade -y
 
@@ -127,7 +134,11 @@ RUN cd /home/dxy_apm_ws/ \
 RUN cd /home/dxy_apm_ws/ \
     && rm -rf build/ install/ log/ \
     && sudo apt-get update \
-    && rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6 gz-cmake3" \
+    && if [ "${ROS_DISTRO}" = "humble" ]; then \
+        rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6"; \
+      else \
+        rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6 gz-cmake3"; \
+      fi \
     && sudo apt-get autoremove -y -qq \
     && sudo rm -rf /var/lib/apt/lists/*
 
