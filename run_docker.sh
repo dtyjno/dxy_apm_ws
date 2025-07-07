@@ -37,7 +37,10 @@ USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 
 # 基础Docker运行命令
-DOCKER_CMD="docker run -it --rm \
+DOCKER_CMD="docker run -it --gpus all \
+	--device /dev/dri:/dev/dri \
+        -e DISPLAY=$DISPLAY \
+        -e NVIDIA_DRIVER_CAPABILITIES=all \
     --name dxy_apm_${MODE} \
     --user $USER_ID:$GROUP_ID \
     --env DISPLAY=$DISPLAY \
