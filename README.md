@@ -23,8 +23,58 @@
 - 仿真概述
 ![仿真概述](doc/仿真概述.png)
 
+### 1.5 安装环境：docker
 
+1. 安装docker  
+  换源，设置正确的用户权限：[docker安装指南](doc/docker_install.md)
+2. 构建docker镜像
+```bash
+./build_docker.sh
+#在Dockerfile/Dockfile首行更改使用的环境版本：
+# ARG ROS_DISTRO=
+#                humble ubuntu22.04-ros2 humble
+#                jazzy ubuntu24.04-ros2 jazzy
+```
+3. 运行
+```bash
+./run_docker.sh # ......
+    #             gazebo    - 启动Gazebo仿真"
+    #             sitl(TODO)- 启动ArduPilot SITL"
+    #             mavros    - 启动MAVROS"
+    #             offboard  - 启动Offboard控制"
+    #             bash      - 启动交互式bash shell"
+    #             full(TODO)- 启动完整仿真环境（Gazebo + SITL + MAVROS）"
+```
 
+启用显卡
+```bash
+# 外挂电脑硬件
+##安装nvidia-container-toolkit
+### 参考教程
+https://blog.csdn.net/2404_89578344/article/details/146569579
+### 安装依赖
+sudo apt-get update
+sudo apt-get install -y curl
+
+### 添加密钥和仓库
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+### 再执行安装
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+### 更新Docker配置
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker（重启Docker服务）
+# 挂载GPU启动Docker指令
+docker run -it --gpus all \
+  --device /dev/dri:/dev/dri \
+  -e DISPLAY=$DISPLAY \
+  -e NVIDIA_DRIVER_CAPABILITIES=all \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  镜像名/ID
+```
 ### 2. 安装ardupilot仿真（即ardupilot sitl 与 mavros以及gazebo）
 
 docker
@@ -51,6 +101,14 @@ sim_vehicle.py --console --map
 #export PATH="$HOME/ardupilot/Tools/autotest:$PATH"
 # sim_vehicle.py -w -v ArduCopter
 # sim_vehicle.py --vehicle=ArduCopter --console --map
+# 外挂电脑硬件
+##安装nvidia-container-toolkit
+### 参考教程
+https://blog.csdn.net/2404_89578344/article/details/146569579
+### 安装依赖
+sudo apt-get update
+sudo apt-get install -y curl
+
 ```
 
 如果你使用wsl2，你可以尝试[通过 Mission Planner 的模拟功能运行SITL](https://ardupilot.org/planner/docs/mission-planner-simulation.html#mission-planner-simulation)

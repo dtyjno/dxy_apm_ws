@@ -50,6 +50,7 @@ RUN apt-get install -y --no-install-recommends \
     libopencv-dev \
     libyaml-cpp-dev \
     libncurses5-dev \
+    rapidjson-dev \ 
     # lsb-release \
     # ROS2 packages
     ros-${ROS_DISTRO}-mavros \
@@ -64,8 +65,6 @@ RUN apt-get install -y --no-install-recommends \
     ros-${ROS_DISTRO}-trajectory-msgs \
     ros-${ROS_DISTRO}-rviz2 \
     ros-${ROS_DISTRO}-joint-state-publisher-gui \
-    # Gazebo支持
-    ros-${ROS_DISTRO}-ros-gz \
     # 图形界面和仿真支持
     x11-apps \
     mesa-utils \
@@ -93,7 +92,29 @@ RUN apt-get install -y --no-install-recommends \
     # 安装GeographicLib数据集
     geographiclib-get-geoids egm96-5 && \
     : "remove cache" && \
+    # Gazebo支持
+    
+    if [ "${ROS_DISTRO}" = "humble" ]; then \
+      apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-ros-gz; \
+      sudo apt-get install -y  curl lsb-release gnupg
+
+        # https://gazebosim.org/docs/harmonic/install_ubuntu/#binary-installation-on-ubuntu
+
+        sudo apt-get update
+        sudo apt-get install curl lsb-release gnupg
+        sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install gz-harmonic
+        apt-get install ros-humble-ros-gzharmonic
+
+
+
+    else if [ "${ROS_DISTRO}" = "jazzy" ]; then \
+      apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-ros-gz; \
+    fi && \
     apt-get autoremove -y -qq && \
+    # 清理APT缓存
     rm -rf /var/lib/apt/lists/*
 
 # 创建用户
@@ -128,17 +149,20 @@ RUN cd /home/dxy_apm_ws/ \
     && sudo mkdir -p /etc/ros/rosdep/sources.list.d/  \
     && sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list -L https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list \
     && export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml \
-    && rosdep update --rosdistro ${ROS_DISTRO}
+    && rosdep update --rosdistro ${ROS_DISTRO} \
+    && if [ "${ROS_DISTRO}" = "humble" ]; then \
+        cd /home/dxy_apm_ws/src/ardupilot_gazebo && \
+        git checkout fortress; \
+      else \
+        cd /home/dxy_apm_ws/src/ardupilot_gazebo && \
+        git checkout ros2; \
+      fi
 
 # 清理之前的构建缓存和安装项目依赖
 RUN cd /home/dxy_apm_ws/ \
     && rm -rf build/ install/ log/ \
     && sudo apt-get update \
-    && if [ "${ROS_DISTRO}" = "humble" ]; then \
-        rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6"; \
-      else \
-        rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6 gz-cmake3"; \
-      fi \
+    && rosdep install --from-paths src -i -y --rosdistro ${ROS_DISTRO} --skip-keys="gz-sim8 ignition-gazebo6 gz-cmake3" \
     && sudo apt-get autoremove -y -qq \
     && sudo rm -rf /var/lib/apt/lists/*
 

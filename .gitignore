@@ -5,5 +5,7 @@ log/
 logs/
 terrain/
 mav.tlog.raw
+mav.tlog
+mav.parm
 mav_0_1.parm
 eeprom.bin
