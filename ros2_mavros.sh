@@ -11,7 +11,7 @@ ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555;
 # 或
 # sudo usermod -aG dialout username
 
-ros2 launch mavros apm.launch fcu_url:=/dev/ttyACM0:57600;
+# ros2 launch mavros apm.launch fcu_url:=/dev/ttyACM0:57600;
 
 exec bash;"
 
