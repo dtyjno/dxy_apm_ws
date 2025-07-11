@@ -1,21 +1,14 @@
 #!/bin/bash
 
-# pip install MAVproxy wxpython
-
-# pip install future lxml pymavlink pyserial MAVProxy geocoder empy==3.3.4 ptyprocess dronecan flake8 junitparser wsproto tabulate  pygame intelhex numpy pyparsing psutil matplotlib scipy opencv-python pyyaml  wxpython opencv-python  -i https://pypi.tuna.tsinghua.edu.cn/simple
-# mavproxy:
-# vim /home/linhao/.local/lib/python3.13/site-packages/MAVProxy/modules/mavproxy_map/mp_tile.py
-# :615
-# img = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
-# :wq
-
-
-
+# pip install MAVproxy
+sudo chmod 777 /dev/ttyACM0
 # 启动MAVProxy作为主要中继
 gnome-terminal -t "mavproxy" -x bash -c "
+source ~/anaconda3/etc/profile.d/conda.sh
+conda activate droneplanner
 # MAVProxy连接SITL并转发到多个端口
 mavproxy.py \
-    --master=udp:127.0.0.1:14550 \
+    --master='/dev/ttyACM0' \
     --out=udp:127.0.0.1:14551 \
     --out=udp:127.0.0.1:14552 \
     --console --moddebug 3;
