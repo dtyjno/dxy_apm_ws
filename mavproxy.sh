@@ -1,6 +1,15 @@
 #!/bin/bash
 
-# pip install MAVproxy
+# pip install MAVproxy wxpython
+
+# pip install future lxml pymavlink pyserial MAVProxy geocoder empy==3.3.4 ptyprocess dronecan flake8 junitparser wsproto tabulate  pygame intelhex numpy pyparsing psutil matplotlib scipy opencv-python pyyaml  wxpython opencv-python  -i https://pypi.tuna.tsinghua.edu.cn/simple
+# mavproxy:
+# vim /home/linhao/.local/lib/python3.13/site-packages/MAVProxy/modules/mavproxy_map/mp_tile.py
+# :615
+# img = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+# :wq
+
+
 
 # 启动MAVProxy作为主要中继
 gnome-terminal -t "mavproxy" -x bash -c "
