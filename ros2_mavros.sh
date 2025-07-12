@@ -1,6 +1,5 @@
 #!/bin/bash
-
-gnome-terminal -t "mavros" -x bash -c "#cd ~/ws_sensor_combined/;
+gnome-terminal --title "mavros" -- bash -c "
 #cd ~/ardupilot_ws;
 source /opt/ros/jazzy/setup.bash;
 #source install/local_setup.bash;
