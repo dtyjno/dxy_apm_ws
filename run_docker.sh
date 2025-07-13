@@ -37,7 +37,7 @@ USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 
 # 基础Docker运行命令
-DOCKER_CMD="docker run -it --gpus all \
+DOCKER_CMD="docker run -it --rm --gpus all \
 	--device /dev/dri:/dev/dri \
         -e DISPLAY=$DISPLAY \
         -e NVIDIA_DRIVER_CAPABILITIES=all \
@@ -52,7 +52,6 @@ DOCKER_CMD="docker run -it --gpus all \
     --network host \
     --ipc host \
     --pid host \
-
     dxy_apm_ws:latest"
 
 case $MODE in

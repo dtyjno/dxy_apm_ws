@@ -1,11 +1,11 @@
 #!/bin/bash
-
+docker run -it dxy_apm_ws
 # Docker镜像构建脚本
 
 echo "开始构建DXY APM Docker镜像..."
 
 # 构建Docker镜像
-docker build -t dxy_apm_ws:latest -f Dockerfile/Dockerfile .
+docker build -t mavrosa:latest -f Dockerfile/Docker_Mavros .
 
 if [ $? -eq 0 ]; then
     echo "✅ Docker镜像构建成功!"
