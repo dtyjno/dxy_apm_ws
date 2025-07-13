@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gnome-terminal -t "ros2" -x bash -c "#cd ~/ws_sensor_combined/;
+gnome-terminal --title "gazebo" -- bash -c "
 cd ~/ardupilot_ws;
 source /opt/ros/humble/setup.bash;
 source install/local_setup.bash;

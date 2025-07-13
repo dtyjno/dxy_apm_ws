@@ -405,3 +405,57 @@ ros2 run px4_ros_com _offboard
 #-----------或使用脚本
 ./run.sh
 ```
+
+### 数据记录 (rosbag) 可视化
+
+sudo apt install ros-$ROS_DISTRO-plotjuggler-ros
+
+sudo apt-get install ros-$ROS_DISTRO-pal-statistics 
+
+
+通过从命令行运行 `ros2 run plotjuggler plotjuggler` 打开 PlotJuggler 。
+
+通过从 ros2bag 文件导入或使用 Streaming 标题下的 ROS2 Topic Subscriber 选项实时订阅 ROS2 主题来实现数据可视化。
+
+### 
+
+#### 安装rosbag2
+```bash
+# sudo apt install ros-$ROS_DISTRO-rosbag2-storage-default-plugins
+# sudo apt install ros-$ROS_DISTRO-rosbag2-storage-mcap
+```
+
+#### 记录飞行数据
+```bash
+# ros2 bag record -o log_name [topic_name...]
+# 记录相关话题
+./record_flight_data.sh
+
+# 记录PID统计数据
+./record_pid_tuning.sh 
+```
+
+#### 回放和分析数据
+```bash
+# 查看bag信息
+ros2 bag info flight_data_20250112_143022
+
+# 回放数据
+ros2 bag play flight_data_20250112_143022
+
+# 在PlotJuggler中分析
+ros2 run plotjuggler plotjuggler
+# 然后在界面中选择 "File" -> "Load Rosbag"
+
+# 转换为CSV格式进行分析
+ros2 bag info flight_data_20250112_143022 --verbose
+```
+
+#### 数据分析示例
+```bash
+# 提取位置误差数据
+ros2 topic echo /statistics --field statistics | grep "error" > position_errors.txt
+
+# 分析PID性能
+# python3 analyze_pid_performance.py flight_data_20250112_143022
+```

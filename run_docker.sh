@@ -2,6 +2,7 @@
 
 # Docker运行脚本 - 多功能启动
 # 支持Gazebo仿真、ArduPilot SITL和MAVROS
+# 自动检测并使用GPU设备
 
 # 使用说明
 usage() {
@@ -36,6 +37,59 @@ xhost +local:docker
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 
+# 检测GPU设备可用性
+detect_gpu() {
+    local gpu_available=false
+    local gpu_runtime=""
+    local gpu_args=""
+    
+    # 检查NVIDIA GPU
+    if command -v nvidia-smi &> /dev/null; then
+        if nvidia-smi &> /dev/null; then
+            echo "检测到NVIDIA GPU" >&2
+            gpu_available=true
+            gpu_runtime="nvidia"
+            gpu_args="--gpus all --runtime=nvidia"
+            # 检查nvidia-container-toolkit是否安装
+            if ! docker info 2>/dev/null | grep -q nvidia; then
+                echo "警告: nvidia-container-toolkit未正确安装，将使用CPU模式" >&2
+                gpu_available=false
+                gpu_args=""
+            fi
+        else
+            echo "NVIDIA GPU驱动未正确安装" >&2
+        fi
+    fi
+    
+    # 检查AMD GPU (ROCm)
+    if [ "$gpu_available" = false ] && command -v rocm-smi &> /dev/null; then
+        if rocm-smi &> /dev/null; then
+            echo "检测到AMD GPU (ROCm)" >&2
+            gpu_available=true
+            gpu_runtime="rocm"
+            gpu_args="--device=/dev/kfd --device=/dev/dri --security-opt seccomp=unconfined --group-add video"
+        fi
+    fi
+    
+    # 检查Intel GPU
+    if [ "$gpu_available" = false ] && [ -d "/dev/dri" ]; then
+        echo "检测到Intel GPU或集成显卡" >&2
+        gpu_available=true
+        gpu_runtime="intel"
+        gpu_args="--device /dev/dri:/dev/dri"
+    fi
+    
+    if [ "$gpu_available" = false ]; then
+        echo "未检测到可用的GPU设备，使用CPU模式" >&2
+        gpu_args=""
+    fi
+    
+    echo "$gpu_args"
+}
+
+# 获取GPU参数
+GPU_ARGS=$(detect_gpu)
+
 # 基础Docker运行命令
 DOCKER_CMD="docker run -it --rm --gpus all \
 	--device /dev/dri:/dev/dri \
@@ -47,7 +101,6 @@ DOCKER_CMD="docker run -it --rm --gpus all \
     --env ROS_LOCALHOST_ONLY=0 \
     --env QT_X11_NO_MITSHM=1 \
     --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    --volume /dev/dri:/dev/dri \
     --privileged \
     --network host \
     --ipc host \
