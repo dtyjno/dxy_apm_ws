@@ -25,8 +25,12 @@ sim_vehicle.py -D -v ArduCopter -f gazebo-iris --model JSON --map --console \
 "
 sleep 17s
 gnome-terminal --title "mavros" -- bash -c "
-source ~/ros2_ws/install/setup.bash;
-./run_docker.sh mavros
-
+#source ~/ros2_ws/install/setup.bash;
+#ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555;
+./run_docker.sh mavros;
+"
+sleep 1s
+gnome-terminal --title "gazebo_yolo" -- bash -c "
+./ros2_gazebo_yolo.sh;
 "
 #gnome-terminal -t "mavproxy" -x bash -c "mavproxy.py --console --map --aircraft test --master=:14550"

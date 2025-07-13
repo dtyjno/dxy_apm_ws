@@ -4,9 +4,6 @@
 
 echo "开始构建DXY APM Docker镜像..."
 
-# 切换到项目根目录
-cd /home/linhao/code/ros2/dxy_apm_ws
-
 # 构建Docker镜像
 docker build -t dxy_apm_ws:latest -f Dockerfile/Dockerfile .
 

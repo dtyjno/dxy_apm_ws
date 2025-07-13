@@ -91,8 +91,10 @@ detect_gpu() {
 GPU_ARGS=$(detect_gpu)
 
 # 基础Docker运行命令
-DOCKER_CMD="docker run --rm -it \
-    $GPU_ARGS \
+DOCKER_CMD="docker run -it --rm --gpus all \
+	--device /dev/dri:/dev/dri \
+        -e DISPLAY=$DISPLAY \
+        -e NVIDIA_DRIVER_CAPABILITIES=all \
     --name dxy_apm_${MODE} \
     --user $USER_ID:$GROUP_ID \
     --env DISPLAY=$DISPLAY \
@@ -102,23 +104,8 @@ DOCKER_CMD="docker run --rm -it \
     --privileged \
     --network host \
     --ipc host \
-    --pid host"
-
-# 根据GPU类型添加特定环境变量
-if echo "$GPU_ARGS" | grep -q "nvidia"; then
-    DOCKER_CMD="$DOCKER_CMD \
-        --env NVIDIA_VISIBLE_DEVICES=all \
-        --env NVIDIA_DRIVER_CAPABILITIES=all"
-elif echo "$GPU_ARGS" | grep -q "rocm"; then
-    DOCKER_CMD="$DOCKER_CMD \
-        --env HSA_OVERRIDE_GFX_VERSION=10.3.0 \
-        --env ROCR_VISIBLE_DEVICES=all"
-fi
-
-# 完整的Docker命令
-DOCKER_CMD="$DOCKER_CMD dxy_apm_ws:latest"
-
-echo "Docker启动命令: $DOCKER_CMD"
+    --pid host \
+    dxy_apm_ws:latest"
 
 case $MODE in
     "gazebo")
