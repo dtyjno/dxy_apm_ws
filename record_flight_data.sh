@@ -27,8 +27,10 @@ ros2 bag record \
     /mavros/home_position/home \
     /mavros/setpoint_raw/local \
     /mavros/setpoint_raw/attitude \
+    /mavros/rangefinder/rangefinder \
     /detected_boxes \
     /statistics \
+    /current_state \
     /tf \
     /tf_static
 
