@@ -1,6 +1,6 @@
 # TODO: Add SITL support
 
-ARG ROS_DISTRO=humble
+ARG ROS_DISTRO=jazzy
 
 FROM ros:${ROS_DISTRO}-ros-base
 
@@ -8,23 +8,22 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 设置Ubuntu镜像源 (noble for jazzy, jammy for humble)
 RUN arch=$(dpkg --print-architecture) && \
-    if [ "${ROS_DISTRO}" = "humble" ]; then \
-      UBUNTU_VERSION="jammy"; \
-    elif [ "${ROS_DISTRO}" = "jazzy" ]; then \
-      UBUNTU_VERSION="noble"; \
-    else \
-      UBUNTU_VERSION="jammy"; \
-    fi && \
     if [ "$arch" = "amd64" ] || [ "$arch" = "i386" ]; then \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION} main restricted universe multiverse" > /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION}-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION}-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${UBUNTU_VERSION}-security main restricted universe multiverse" >> /etc/apt/sources.list ; \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse" > /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list && \
+      # 增加官方源作为补充，避免国内镜像缺包导致404
+      echo "deb [arch=$arch] http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse" >> /etc/apt/sources.list ; \
     else \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ ${UBUNTU_VERSION} main restricted universe multiverse" > /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ ${UBUNTU_VERSION}-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ ${UBUNTU_VERSION}-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
-      echo "deb [arch=$arch] http://ports.ubuntu.com/ubuntu-ports/ ${UBUNTU_VERSION}-security main restricted universe multiverse" >> /etc/apt/sources.list ; \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ noble main restricted universe multiverse" > /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ noble-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] http://ports.ubuntu.com/ubuntu-ports/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list && \
+      # 增加官方源作为补充，避免国内镜像缺包导致404
+      echo "deb [arch=$arch] http://ports.ubuntu.com/ubuntu-ports/ noble main restricted universe multiverse" >> /etc/apt/sources.list && \
+      echo "deb [arch=$arch] http://ports.ubuntu.com/ubuntu-ports/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list ; \
     fi && \
     rm -f /etc/apt/sources.list.d/* && \
     apt-get update && \
@@ -32,7 +31,7 @@ RUN arch=$(dpkg --print-architecture) && \
     rm -f /etc/apt/sources.list.d/ros2.list && \
     curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg && \
     chmod a+r /usr/share/keyrings/ros-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu ${UBUNTU_VERSION} main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu noble main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
     apt-get update && \
     apt-get upgrade -y
 
@@ -50,7 +49,6 @@ RUN apt-get install -y --no-install-recommends \
     libopencv-dev \
     libyaml-cpp-dev \
     libncurses5-dev \
-    rapidjson-dev \ 
     # lsb-release \
     # ROS2 packages
     ros-${ROS_DISTRO}-mavros \
@@ -65,9 +63,12 @@ RUN apt-get install -y --no-install-recommends \
     ros-${ROS_DISTRO}-trajectory-msgs \
     ros-${ROS_DISTRO}-rviz2 \
     ros-${ROS_DISTRO}-joint-state-publisher-gui \
+    # Gazebo支持
+    ros-${ROS_DISTRO}-ros-gz \
     # 图形界面和仿真支持
     x11-apps \
     mesa-utils \
+    ros-${ROS_DISTRO}-plotjuggler-ros \
     # libgl1-mesa-glx \
     libgl1-mesa-dri \
     xvfb \
@@ -92,29 +93,7 @@ RUN apt-get install -y --no-install-recommends \
     # 安装GeographicLib数据集
     geographiclib-get-geoids egm96-5 && \
     : "remove cache" && \
-    # Gazebo支持
-    
-    if [ "${ROS_DISTRO}" = "humble" ]; then \
-      apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-ros-gz; \
-      sudo apt-get install -y  curl lsb-release gnupg
-
-        # https://gazebosim.org/docs/harmonic/install_ubuntu/#binary-installation-on-ubuntu
-
-        sudo apt-get update
-        sudo apt-get install curl lsb-release gnupg
-        sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
-        sudo apt-get update
-        sudo apt-get install gz-harmonic
-        apt-get install ros-humble-ros-gzharmonic
-
-
-
-    else if [ "${ROS_DISTRO}" = "jazzy" ]; then \
-      apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-ros-gz; \
-    fi && \
     apt-get autoremove -y -qq && \
-    # 清理APT缓存
     rm -rf /var/lib/apt/lists/*
 
 # 创建用户
@@ -149,14 +128,7 @@ RUN cd /home/dxy_apm_ws/ \
     && sudo mkdir -p /etc/ros/rosdep/sources.list.d/  \
     && sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list -L https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list \
     && export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml \
-    && rosdep update --rosdistro ${ROS_DISTRO} \
-    && if [ "${ROS_DISTRO}" = "humble" ]; then \
-        cd /home/dxy_apm_ws/src/ardupilot_gazebo && \
-        git checkout fortress; \
-      else \
-        cd /home/dxy_apm_ws/src/ardupilot_gazebo && \
-        git checkout ros2; \
-      fi
+    && rosdep update --rosdistro ${ROS_DISTRO}
 
 # 清理之前的构建缓存和安装项目依赖
 RUN cd /home/dxy_apm_ws/ \
@@ -172,7 +144,7 @@ RUN cd /home/dxy_apm_ws/ \
     && colcon build --symlink-install --packages-select ros2_interfaces ros2_yolo_msgs" \
     && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
     && source install/setup.bash \
-    && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2"
+    && colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip topic topic2 px4_ros_com"
 
 # # 设置环境变量到bashrc
 # RUN echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc \

@@ -18,7 +18,7 @@ sleep 1;
 
 sleep 3s
 gnome-terminal --title "SITL" -- bash -c "
-sim_vehicle.py -D -v ArduCopter -f gazebo-iris --model JSON --map --console \
+sim_vehicle.py -D -v ArduCopter -f gazebo-iris --model JSON \
   --out 127.0.0.1:14550 \
   --out 127.0.0.1:14551 \
   --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm;
@@ -27,7 +27,8 @@ sleep 17s
 gnome-terminal --title "mavros" -- bash -c "
 #source ~/ros2_ws/install/setup.bash;
 #ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555;
-./run_docker.sh mavros;
+#./run_docker.sh mavros;
+./mavproxy_sitl.sh ;
 "
 sleep 1s
 gnome-terminal --title "gazebo_yolo" -- bash -c "

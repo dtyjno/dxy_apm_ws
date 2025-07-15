@@ -27,12 +27,10 @@ ros2 bag record \
     /mavros/home_position/home \
     /mavros/setpoint_raw/local \
     /mavros/setpoint_raw/attitude \
+    /detected_boxes \
     /statistics \
-    /current_state \
     /tf \
     /tf_static
-
-cp -r ./src/px4_ros_com/config ./logs/${OUTPUT_NAME}/config
 
 echo "数据记录完成，文件保存在: ./logs/${OUTPUT_NAME}"
 echo "使用以下命令查看记录信息:"

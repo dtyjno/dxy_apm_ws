@@ -101,6 +101,9 @@ DOCKER_CMD="docker run -it --rm --gpus all \
     --env ROS_LOCALHOST_ONLY=0 \
     --env QT_X11_NO_MITSHM=1 \
     --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    --volume $HOME/Downloads:$HOME/Downloads:rw \
+    --volume $(pwd):/workspace:rw \
+    --volume
     --privileged \
     --network host \
     --ipc host \
@@ -119,6 +122,10 @@ case $MODE in
     "mavros")
         echo "启动MAVROS..."
         $DOCKER_CMD bash -c "ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555"
+        ;;
+    "plotj")
+        echo "启动plotjuggler..."
+        $DOCKER_CMD bash -c "ros2 run plotjuggler plotjuggler"
         ;;
     "bash")
         echo "启动交互式bash shell..."
