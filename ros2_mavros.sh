@@ -16,6 +16,7 @@ mavproxy.py \
 
 
 # ros2 launch mavros apm.launch fcu_url:="tcp://127.0.0.1:5760" 
+# 	<node pkg="mavros" exec="mavros_node" namespace="$(var namespace)" output="screen" args="--ros-args --log-level DEBUG">
 # ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555 | grep -v "rcl"
 
 # sudo chmod 777 /dev/ttyACM0 
