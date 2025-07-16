@@ -1,5 +1,5 @@
 #!/bin/bash
-docker run -it dxy_apm_ws
+# docker run -it dxy_apm_ws
 # Docker镜像构建脚本
 
 echo "开始构建DXY APM Docker镜像..."
