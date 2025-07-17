@@ -407,11 +407,11 @@ ros2 run px4_ros_com _offboard
 ```
 
 ### 数据记录 (rosbag) 可视化
-
+```bash
 sudo apt install ros-$ROS_DISTRO-plotjuggler-ros
 
 sudo apt-get install ros-$ROS_DISTRO-pal-statistics 
-
+```
 
 通过从命令行运行 `ros2 run plotjuggler plotjuggler` 打开 PlotJuggler 。
 

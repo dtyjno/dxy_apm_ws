@@ -49,6 +49,9 @@ RUN apt-get install -y --no-install-recommends \
     ros-${ROS_DISTRO}-mavros-msgs \
     ros-${ROS_DISTRO}-mavros-extras \
     ros-${ROS_DISTRO}-plotjuggler-ros \
+    ros-$ROS_DISTRO-plotjuggler-ros \
+    ros-$ROS_DISTRO-pal-statistics \
+    dbus-x11 \
     wget && \
     # 安装GeographicLib数据集
     # wget https://gitee.com/tyx6/mytools/raw/main/mavros/install_geographiclib_datasets.sh && \

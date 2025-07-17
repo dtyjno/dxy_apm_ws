@@ -31,9 +31,10 @@ ros2 bag record \
     /detected_boxes \
     /statistics \
     /current_state \
+    /visualization_targets \
     /tf \
     /tf_static
-
+cp -r ./src/px4_ros_com/config ./logs/${OUTPUT_NAME}/config
 echo "数据记录完成，文件保存在: ./logs/${OUTPUT_NAME}"
 echo "使用以下命令查看记录信息:"
 echo "ros2 bag info ./logs/${OUTPUT_NAME}"

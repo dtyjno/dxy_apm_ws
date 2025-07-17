@@ -5,7 +5,7 @@
 echo "开始构建DXY APM Docker镜像..."
 
 # 构建Docker镜像
-docker build -t mavrosa:latest -f Dockerfile/Docker_Mavros .
+docker build -t mavros:latest -f Dockerfile/Docker_Mavros .
 
 if [ $? -eq 0 ]; then
     echo "✅ Docker镜像构建成功!"

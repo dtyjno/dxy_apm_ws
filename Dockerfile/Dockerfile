@@ -139,7 +139,15 @@ RUN cd /home/dxy_apm_ws/ \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # 构建项目
-RUN cd /home/dxy_apm_ws/ \
+WORKDIR /tmp
+RUN git clone --recurse-submodules https://github.com/ArduPilot/ardupilot.git \
+    && cd ardupilot \
+    && sed -i '/sudo usermod -a -G dialout/d' Tools/environment_install/install-prereqs-ubuntu.sh \
+    && Tools/environment_install/install-prereqs-ubuntu.sh -y \
+    && . ~/.profile \
+    && ./waf configure --board sitl \
+    && ./waf copter \
+    && cd /home/dxy_apm_ws/ \
     && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
     && colcon build --symlink-install --packages-select ros2_interfaces ros2_yolo_msgs" \
     && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash \
