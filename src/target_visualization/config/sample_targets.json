@@ -1,0 +1,60 @@
+{
+  "targets": [
+    {
+      "id": 1,
+      "category": "circle",
+      "center_x": 320,
+      "center_y": 240,
+      "radius": 45,
+      "confidence": 0.95,
+      "world_x": 2.5,
+      "world_y": 1.2,
+      "world_z": 10.0
+    },
+    {
+      "id": 2,
+      "category": "H_type",
+      "center_x": 600,
+      "center_y": 180,
+      "radius": 35,
+      "confidence": 0.87,
+      "world_x": 4.1,
+      "world_y": -0.8,
+      "world_z": 12.0
+    },
+    {
+      "id": 3,
+      "category": "circle",
+      "center_x": 850,
+      "center_y": 400,
+      "radius": 50,
+      "confidence": 0.92,
+      "world_x": 6.2,
+      "world_y": 2.1,
+      "world_z": 8.5
+    },
+    {
+      "id": 4,
+      "category": "H_type",
+      "center_x": 150,
+      "center_y": 350,
+      "radius": 28,
+      "confidence": 0.78,
+      "world_x": -1.5,
+      "world_y": 1.8,
+      "world_z": 15.0
+    }
+  ],
+  "metadata": {
+    "timestamp": "2024-01-15T10:30:00Z",
+    "camera_info": {
+      "width": 1280,
+      "height": 720,
+      "focal_length": 500
+    },
+    "detection_params": {
+      "confidence_threshold": 0.5,
+      "nms_threshold": 0.4
+    }
+  }
+}
