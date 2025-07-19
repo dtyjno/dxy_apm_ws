@@ -28,10 +28,10 @@ ros2 bag record \
     /mavros/setpoint_raw/local \
     /mavros/setpoint_raw/attitude \
     /mavros/rangefinder/rangefinder \
-    /detected_boxes \
     /statistics \
     /current_state \
     /visualization_targets \
+    /detection2d_array \
     /tf \
     /tf_static
 cp -r ./src/px4_ros_com/config ./logs/${OUTPUT_NAME}/config

@@ -5,7 +5,7 @@
 #include "cv_bridge/cv_bridge.hpp"
 #include "Mat2image.hpp"
 // #include "ros2_interfaces/msg/coord.hpp"
-#include "ros2_yolo_msgs/msg/detected_box.hpp"
+#include "vision_msgs/msg/detection2_d_array.hpp"
 #include <ctime>
 
 #define USE_CUDA true
@@ -43,7 +43,7 @@ public:
             std::bind(&imageSub::image_callback, this, std::placeholders::_1)
         );
 
-        publisher_ = this->create_publisher<ros2_yolo_msgs::msg::DetectedBox>("detected_boxes", 10);
+        publisher_ = this->create_publisher<vision_msgs::msg::Detection2DArray>("detection2d_array", 10);
 
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(10), 
@@ -54,7 +54,7 @@ public:
 
 private:
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber_;
-    rclcpp::Publisher<ros2_yolo_msgs::msg::DetectedBox>::SharedPtr publisher_;
+    rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     VideoCapture cap;
     Yolo test;
@@ -187,13 +187,59 @@ private:
     }
 
     void timer_callback() {
-        ros2_yolo_msgs::msg::DetectedBox message;
-        sscanf(cir_coord, "%f,%f,%d", &message.x1, &message.y1, &message.servo);
-        sscanf(H_coord, "%f, %f", &message.x2, &message.y2);
-        // message.y1 =  - message.y1; // Flip the y-coordinate
-        // message.y2 =  - message.y2; // Flip the y-coordinate
-        RCLCPP_INFO(this->get_logger(), "Publishing DetectedBox, %f, %f, %f, %f, %d", message.x1, message.y1, message.x2, message.y2, message.servo);
-        publisher_->publish(message);
+        // 发布 Detection2DArray 消息
+        vision_msgs::msg::Detection2DArray detection_array;
+        detection_array.header.stamp = this->get_clock()->now();
+        detection_array.header.frame_id = "camera_frame";
+        
+        // 如果有圆形目标坐标
+        float cir_x, cir_y;
+        int servo;
+        if (sscanf(cir_coord, "%f,%f,%d", &cir_x, &cir_y, &servo) >= 2 && cir_x != 0 && cir_y != 0) {
+            vision_msgs::msg::Detection2D detection;
+            detection.header = detection_array.header;
+            
+            // 设置边界框
+            detection.bbox.center.position.x = cir_x;
+            detection.bbox.center.position.y = cir_y;
+            detection.bbox.center.theta = 0.0;
+            detection.bbox.size_x = 50.0;  // 假设的边界框宽度
+            detection.bbox.size_y = 50.0;  // 假设的边界框高度
+            
+            // 设置检测结果
+            vision_msgs::msg::ObjectHypothesisWithPose hypothesis;
+            hypothesis.hypothesis.class_id = "circle";  // 圆形目标的类别ID
+            hypothesis.hypothesis.score = 0.9;     // 假设的置信度
+            detection.results.push_back(hypothesis);
+            
+            detection_array.detections.push_back(detection);
+        }
+        
+        // 如果有H形目标坐标
+        float h_x, h_y;
+        if (sscanf(H_coord, "%f, %f", &h_x, &h_y) == 2 && h_x != 0 && h_y != 0) {
+            vision_msgs::msg::Detection2D detection;
+            detection.header = detection_array.header;
+            
+            // 设置边界框
+            detection.bbox.center.position.x = h_x;
+            detection.bbox.center.position.y = h_y;
+            detection.bbox.center.theta = 0.0;
+            detection.bbox.size_x = 50.0;  // 假设的边界框宽度
+            detection.bbox.size_y = 50.0;  // 假设的边界框高度
+            
+            // 设置检测结果
+            vision_msgs::msg::ObjectHypothesisWithPose hypothesis;
+            hypothesis.hypothesis.class_id = "h";  // H形目标的类别ID
+            hypothesis.hypothesis.score = 0.9;     // 假设的置信度
+            detection.results.push_back(hypothesis);
+            
+            detection_array.detections.push_back(detection);
+        }
+        
+        // 发布 Detection2DArray 消息
+        publisher_->publish(detection_array);
+        // RCLCPP_INFO(this->get_logger(), "Published Detection2DArray with %zu detections", detection_array.detections.size());
     }
 
     void drive_servo(char *str, double target_x, double target_y, double duration) {
