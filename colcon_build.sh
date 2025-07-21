@@ -1,16 +1,22 @@
 #!/bin/bash
 
-gnome-terminal -t "ros2" -x bash -c "#cd ~/ws_sensor_combined/;
+# gnome-terminal -t "ros2" -x bash -c "#cd ~/ws_sensor_combined/;
 #cd ~/ros2_ws;
-cd ~/ardupilot_ws;
-source /opt/ros/humble/setup.bash;
+# cd ~/ardupilot_ws;
+# source /opt/ros/humble/setup.bash;
 #colcon build;
-colcon build --packages-select px4_ros_com; 
+# colcon build --packages-select px4_ros_com; 
 #cd ~/ros2_ws;
 #colcon build --packages-up-to ardupilot_gz_bringup;
-exec bash;"
+# exec bash;"
 
-cd ~/ardupilot_ws;
-source /opt/ros/humble/setup.bash;
-MAKEFLAGS="-j1 " colcon build --executor sequential --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=ON;
+# cd ~/ardupilot_ws;
+# source /opt/ros/humble/setup.bash;
+# MAKEFLAGS="-j1 " colcon build --executor sequential --event-handlers console_direct+ --cmake-args -DBUILD_TESTING=ON;
 
+source /opt/ros/jazzy/setup.bash
+colcon build --packages-select ros2_interfaces
+source install/setup.bash
+colcon build --packages-ignore ros_yolo --packages-skip ros_yolo
+./vision_colcon_build.sh
+conda deactivate 2>/dev/null

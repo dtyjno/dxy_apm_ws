@@ -14,3 +14,7 @@
 	path = src/ardupilot_gazebo
 	url = https://github.com/ArduPilot/ardupilot_gazebo.git
 	branch = ros2
+[submodule "src/ros2_yolov8"]
+	path = src/ros2_yolov8
+	url = git@github.com:ak47k98/ros2_yolov8.git
+	branch = drone
