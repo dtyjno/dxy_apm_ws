@@ -1,1 +1,0 @@
-source install/setup.bash && ros2 launch target_visualization target_visualization.launch.py

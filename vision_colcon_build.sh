@@ -1,4 +1,6 @@
 #!/bin/bash
+                # ('model_path1', './src/ros2_yolov8/ros2_v8/best_circle.pt'),
+                # ('model_path2', './src/ros2_yolov8/ros2_v8/best_H.pt'),
 conda deactivate 2>/dev/null
 source /opt/ros/jazzy/setup.bash;
 source ~/miniconda3/etc/profile.d/conda.sh
