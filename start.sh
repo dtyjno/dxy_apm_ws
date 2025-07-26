@@ -18,14 +18,15 @@ ros2 launch ros_gz_sim_ardupilot iris_runway.launch.py;
 
 sleep 3s
 gnome-terminal --title "SITL" -- bash -c "
-sim_vehicle.py -D -v ArduCopter -L HDU -f gazebo-iris --model JSON --map --console \
+sim_vehicle.py -D -v ArduCopter -L HDU -f gazebo-iris --model JSON \
   --out=udp:127.0.0.1:14550 \
   --out=tcp:127.0.0.1:5760 \
   --add-param-file=src/ros_gz_sim_ardupilot/config/gazebo-iris-gimbal.parm;
 "
-sleep 13s
+sleep 10s
 gnome-terminal --title "mavros" -- bash -c "
-source /opt/ros/humble/setup.bash;
-ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555;
+# source /opt/ros/humble/setup.bash;
+# ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:14550@14555;
+./mavproxy_sitl.sh 
 "
 #gnome-terminal -t "mavproxy" -x bash -c "mavproxy.py --console --map --aircraft test --master=:14550"

@@ -18,6 +18,6 @@ source /opt/ros/jazzy/setup.bash
 # colcon build --packages-select ros2_interfaces
 # source install/setup.bash
 colcon build --packages-ignore ros_yolo --packages-skip ros_yolo
-./vision_colcon_build.sh
-conda deactivate 2>/dev/null
+# ./vision_colcon_build.sh
+# conda deactivate 2>/dev/null
 source install/setup.bash

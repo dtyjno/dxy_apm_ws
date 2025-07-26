@@ -4,6 +4,7 @@ install/
 log/
 logs/
 terrain/
+core
 mav.tlog.raw
 mav.tlog
 mav.parm

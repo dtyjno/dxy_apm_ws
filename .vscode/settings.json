@@ -73,7 +73,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "*.bak": "cpp"
     },
     "cmake.sourceDirectory": "/home/linhao/code/ros2/dxy_apm_ws/src/ardupilot_gazebo"
 }
