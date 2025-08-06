@@ -76,5 +76,21 @@
         "variant": "cpp",
         "*.bak": "cpp"
     },
-    "cmake.sourceDirectory": "/home/linhao/code/ros2/dxy_apm_ws/src/ardupilot_gazebo"
+    "cmake.sourceDirectory": "/home/linhao/code/ros2/dxy_apm_ws/src/ardupilot_gazebo",
+    "python.autoComplete.extraPaths": [
+        "/home/ak47k98/dxy_apm_ws/install/target_visualization/lib/python3.10/site-packages",
+        "/home/ak47k98/dxy_apm_ws/install/ros2_yolo_msgs/lib/python3.11/site-packages",
+        "/home/ak47k98/dxy_apm_ws/install/ros2_interfaces/lib/python3.11/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
+        "/home/ak47k98/dev_ws/install/yolov5_ros2/lib/python3.10/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/ak47k98/dxy_apm_ws/install/target_visualization/lib/python3.10/site-packages",
+        "/home/ak47k98/dxy_apm_ws/install/ros2_yolo_msgs/lib/python3.11/site-packages",
+        "/home/ak47k98/dxy_apm_ws/install/ros2_interfaces/lib/python3.11/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
+        "/home/ak47k98/dev_ws/install/yolov5_ros2/lib/python3.10/site-packages"
+    ]
 }

@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/ak47k98/dxy_apm_ws/install/ros2_interfaces/include/**",
+        "/home/ak47k98/dxy_apm_ws/install/px4_ros_com/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/ak47k98/dxy_apm_ws/src/px4_ros_com/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
