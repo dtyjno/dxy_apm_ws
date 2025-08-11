@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+ <tabbed_widget parent="main_window" name="Main Window">
+  <Tab containers="1" tab_name="tab1">
+   <Container>
+    <DockSplitter orientation="-" sizes="0.500717;0.499283" count="2">
+     <DockSplitter orientation="|" sizes="0.5;0.5" count="2">
+      <DockArea name="...">
+       <plot flip_y="false" mode="TimeSeries" flip_x="false" style="Lines">
+        <range right="1754391248.895250" bottom="-5.661680" top="59.980926" left="1754391023.797916"/>
+        <limitY/>
+        <curve name="/mavros/local_position/odom/pose/pose/position/x" color="#d62728"/>
+        <curve name="/mavros/local_position/odom/pose/pose/position/y" color="#1f77b4"/>
+        <curve name="/mavros/local_position/odom/pose/pose/position/z" color="#1ac938"/>
+       </plot>
+      </DockArea>
+      <DockArea name="...">
+       <plot flip_y="false" mode="TimeSeries" flip_x="false" style="Lines">
+        <range right="1754391248.895250" bottom="-0.391439" top="1.739680" left="1754391023.797916"/>
+        <limitY/>
+        <curve name="/mavros/imu/data/orientation/pitch" color="#d62728"/>
+        <curve name="/mavros/imu/data/orientation/roll" color="#1f77b4"/>
+        <curve name="/mavros/imu/data/orientation/yaw" color="#1ac938"/>
+       </plot>
+      </DockArea>
+     </DockSplitter>
+     <DockSplitter orientation="|" sizes="0.5;0.5" count="2">
+      <DockArea name="...">
+       <plot flip_y="false" mode="XYPlot" flip_x="false" style="Lines">
+        <range right="0.396033" bottom="-0.002005" top="0.768675" left="-0.562693"/>
+        <limitY/>
+        <curve curve_x="/statistics/statistics[51]/value" name="/statistics/statistics[5[1]/value;2]/value]" color="#d62728" curve_y="/statistics/statistics[52]/value"/>
+        <curve curve_x="/statistics/statistics[53]/value" name="/statistics/statistics[5[3]/value;4]/value]" color="#1f77b4" curve_y="/statistics/statistics[54]/value"/>
+        <curve curve_x="/statistics/statistics[55]/value" name="/statistics/statistics[5[5]/value;6]/value]" color="#1ac938" curve_y="/statistics/statistics[56]/value"/>
+       </plot>
+      </DockArea>
+      <DockArea name="...">
+       <plot flip_y="false" mode="XYPlot" flip_x="false" style="Lines">
+        <range right="1111.389358" bottom="-128.967851" top="804.196489" left="-34.536452"/>
+        <limitY/>
+        <curve curve_x="/statistics/statistics[41]/value" name="/statistics/statistics[4[1]/value;2]/value]" color="#f14c8b" curve_y="/statistics/statistics[42]/value"/>
+        <curve curve_x="/statistics/statistics[43]/value" name="/statistics/statistics[4[3]/value;4]/value]" color="#f14cc1" curve_y="/statistics/statistics[44]/value"/>
+        <curve curve_x="/statistics/statistics[45]/value" name="/statistics/statistics[4[5]/value;6]/value]" color="#6e64ca" curve_y="/statistics/statistics[46]/value"/>
+        <curve curve_x="/statistics/statistics[47]/value" name="/statistics/statistics[4[7]/value;8]/value]" color="#9467bd" curve_y="/statistics/statistics[48]/value"/>
+       </plot>
+      </DockArea>
+     </DockSplitter>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <currentTabIndex index="0"/>
+ </tabbed_widget>
+ <use_relative_time_offset enabled="0"/>
+ <!-- - - - - - - - - - - - - - - -->
+ <!-- - - - - - - - - - - - - - - -->
+ <Plugins>
+  <plugin ID="DataLoad CSV">
+   <parameters time_axis="" delimiter="0"/>
+  </plugin>
+  <plugin ID="DataLoad MCAP">
+   <parameters clamp_large_arrays="1" selected_topics="/visualization_targets;/tf_static;/tf;/statistics;/mavros/state;/mavros/setpoint_velocity/cmd_vel;/mavros/setpoint_raw/local;/mavros/setpoint_raw/attitude;/mavros/setpoint_position/local;/mavros/rangefinder/rangefinder;/mavros/local_position/odom;/mavros/imu/data;/mavros/home_position/home;/mavros/global_position/global;/mavros/global_position/compass_hdg;/mavros/battery;/detection2d_array;/current_state" use_timestamp="0" max_array_size="500"/>
+  </plugin>
+  <plugin ID="DataLoad ROS2 bags">
+   <use_header_stamp value="false"/>
+   <discard_large_arrays value="true"/>
+   <max_array_size value="100"/>
+   <boolean_strings_to_number value="true"/>
+   <remove_suffix_from_strings value="true"/>
+   <selected_topics value="/current_state;/detection2d_array;/mavros/battery;/mavros/global_position/compass_hdg;/mavros/global_position/global;/mavros/home_position/home;/mavros/imu/data;/mavros/local_position/odom;/mavros/rangefinder/rangefinder;/mavros/setpoint_position/local;/mavros/setpoint_raw/attitude;/mavros/setpoint_raw/local;/mavros/setpoint_velocity/cmd_vel;/mavros/state;/statistics;/tf;/tf_static;/visualization_targets"/>
+  </plugin>
+  <plugin ID="DataLoad ULog"/>
+  <plugin ID="ROS2 Topic Subscriber">
+   <use_header_stamp value="false"/>
+   <discard_large_arrays value="true"/>
+   <max_array_size value="100"/>
+   <boolean_strings_to_number value="true"/>
+   <remove_suffix_from_strings value="true"/>
+   <selected_topics value="/mavros/adsb/send;/mavros/adsb/vehicle;/mavros/cam_imu_sync/cam_imu_stamp;/mavros/camera/image_captured;/mavros/cellular_status/status;/mavros/esc_status/info;/mavros/esc_status/status;/mavros/esc_telemetry/telemetry;/mavros/gimbal_control/device/attitude_status;/mavros/geofence/fences;/mavros/gimbal_control/device/info;/mavros/gimbal_control/manager/info;/mavros/gimbal_control/manager/status;/mavros/global_position/compass_hdg;/mavros/global_position/global;/mavros/global_position/gp_lp_offset;/mavros/global_position/gp_origin;/mavros/global_position/local;/mavros/global_position/raw/fix;/mavros/wind_estimation;/mavros/vision_speed/speed_vector;/mavros/vision_speed/speed_twist_cov;/mavros/vision_speed/speed_twist;/mavros/vision_pose/pose_cov;/mavros/vision_pose/pose;/mavros/vfr_hud;/mavros/tunnel/out;/mavros/tunnel/in;/mavros/trajectory/path;/mavros/trajectory/generated;/mavros/trajectory/desired;/mavros/time_reference;/mavros/timesync_status;/mavros/terrain/report;/mavros/statustext/send;/mavros/sys_status;/mavros/statustext/recv;/mavros/status_event;/mavros/setpoint_velocity/cmd_vel_unstamped;/mavros/state;/mavros/setpoint_velocity/cmd_vel;/mavros/setpoint_trajectory/local;/mavros/setpoint_raw/target_local;/mavros/setpoint_trajectory/desired;/mavros/rangefinder_sub;/mavros/setpoint_attitude/cmd_vel;/mavros/setpoint_attitude/thrust;/mavros/global_position/raw/gps_vel;/mavros/global_position/raw/satellites;/mavros/global_position/rel_alt;/mavros/gps_rtk/rtk_baseline;/mavros/gpsstatus/gps1/raw;/mavros/gpsstatus/gps1/rtk;/mavros/gpsstatus/gps2/raw;/mavros/gpsstatus/gps2/rtk;/mavros/home_position/home;/mavros/rangefinder/rangefinder;/mavros/rangefinder_pub;/mavros/gps_input/gps_input;/mavros/global_position/set_gp_origin;/mavros/fake_gps/mocap/pose;/mavros/extended_state;/mavros/estimator_status;/mavros/companion_process/status;/mavros/battery"/>
+  </plugin>
+  <plugin ID="UDP Server"/>
+  <plugin ID="WebSocket Server"/>
+  <plugin ID="ZMQ Subscriber"/>
+  <plugin ID="Fast Fourier Transform"/>
+  <plugin ID="Quaternion to RPY"/>
+  <plugin ID="Reactive Script Editor">
+   <library code="--[[ Helper function to create a series from arrays&#xa;&#xa; new_series: a series previously created with ScatterXY.new(name)&#xa; prefix:     prefix of the timeseries, before the index of the array&#xa; suffix_X:   suffix to complete the name of the series containing the X value. If [nil], use the index of the array.&#xa; suffix_Y:   suffix to complete the name of the series containing the Y value&#xa; timestamp:   usually the tracker_time variable&#xa;              &#xa; Example:&#xa; &#xa; Assuming we have multiple series in the form:&#xa; &#xa;   /trajectory/node.{X}/position/x&#xa;   /trajectory/node.{X}/position/y&#xa;   &#xa; where {N} is the index of the array (integer). We can create a reactive series from the array with:&#xa; &#xa;   new_series = ScatterXY.new(&quot;my_trajectory&quot;) &#xa;   CreateSeriesFromArray( new_series, &quot;/trajectory/node&quot;, &quot;position/x&quot;, &quot;position/y&quot;, tracker_time );&#xa;--]]&#xa;&#xa;function CreateSeriesFromArray( new_series, prefix, suffix_X, suffix_Y, timestamp )&#xa;  &#xa;  --- clear previous values&#xa;  new_series:clear()&#xa;  &#xa;  --- Append points to new_series&#xa;  index = 0&#xa;  while(true) do&#xa;&#xa;    x = index;&#xa;    -- if not nil, get the X coordinate from a series&#xa;    if suffix_X ~= nil then &#xa;      series_x = TimeseriesView.find( string.format( &quot;%s.%d/%s&quot;, prefix, index, suffix_X) )&#xa;      if series_x == nil then break end&#xa;      x = series_x:atTime(timestamp)&#x9; &#xa;    end&#xa;    &#xa;    series_y = TimeseriesView.find( string.format( &quot;%s.%d/%s&quot;, prefix, index, suffix_Y) )&#xa;    if series_y == nil then break end &#xa;    y = series_y:atTime(timestamp)&#xa;    &#xa;    new_series:push_back(x,y)&#xa;    index = index+1&#xa;  end&#xa;end&#xa;&#xa;--[[ Similar to the built-in function GetSeriesNames(), but select only the names with a give prefix. --]]&#xa;&#xa;function GetSeriesNamesByPrefix(prefix)&#xa;  -- GetSeriesNames(9 is a built-in function&#xa;  all_names = GetSeriesNames()&#xa;  filtered_names = {}&#xa;  for i, name in ipairs(all_names)  do&#xa;    -- check the prefix&#xa;    if name:find(prefix, 1, #prefix) then&#xa;      table.insert(filtered_names, name);&#xa;    end&#xa;  end&#xa;  return filtered_names&#xa;end&#xa;&#xa;--[[ Modify an existing series, applying offsets to all their X and Y values&#xa;&#xa; series: an existing timeseries, obtained with TimeseriesView.find(name)&#xa; delta_x: offset to apply to each x value&#xa; delta_y: offset to apply to each y value &#xa;  &#xa;--]]&#xa;&#xa;function ApplyOffsetInPlace(series, delta_x, delta_y)&#xa;  -- use C++ indeces, not Lua indeces&#xa;  for index=0, series:size()-1 do&#xa;    x,y = series:at(index)&#xa;    series:set(index, x + delta_x, y + delta_y)&#xa;  end&#xa;end&#xa;"/>
+   <scripts/>
+  </plugin>
+  <plugin ID="CSV Exporter"/>
+  <plugin ID="ROS2 Topic Re-Publisher"/>
+ </Plugins>
+ <!-- - - - - - - - - - - - - - - -->
+ <previouslyLoaded_Datafiles>
+  <fileInfo prefix="" filename="../../../Downloads/flight_data_0805——24/flight_data_20250805/flight_data_20250805_185021/flight_data_20250805_185021_0.mcap">
+   <plugin ID="DataLoad MCAP">
+    <parameters clamp_large_arrays="1" selected_topics="/visualization_targets;/tf_static;/tf;/statistics;/mavros/state;/mavros/setpoint_velocity/cmd_vel;/mavros/setpoint_raw/local;/mavros/setpoint_raw/attitude;/mavros/setpoint_position/local;/mavros/rangefinder/rangefinder;/mavros/local_position/odom;/mavros/imu/data;/mavros/home_position/home;/mavros/global_position/global;/mavros/global_position/compass_hdg;/mavros/battery;/detection2d_array;/current_state" use_timestamp="0" max_array_size="500"/>
+   </plugin>
+  </fileInfo>
+ </previouslyLoaded_Datafiles>
+ <!-- - - - - - - - - - - - - - - -->
+ <customMathEquations/>
+ <snippets/>
+ <!-- - - - - - - - - - - - - - - -->
+</root>
+
